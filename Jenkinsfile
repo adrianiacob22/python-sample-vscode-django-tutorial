@@ -21,7 +21,7 @@ pipeline {
               script {
                 def dImage = docker.build(registry + "/python-django:$BUILD_ID")
                 env.appImage = dImage
-                sh 'echo "appImage=$appImage" > test/env.sh'
+                sh 'echo "appImage=${dImage}" > test/env.sh'
               }
            }
        }
@@ -35,7 +35,7 @@ pipeline {
                   . ./env.sh
                   docker-compose -p ci build
                   docker-compose -p ci up --abort-on-container-exit
-
+                  echo "${env.appImage}"
                   '''
               }
            }
@@ -43,6 +43,7 @@ pipeline {
        stage('Publish') {
            steps{
                script {
+
                    docker.withRegistry( registry, registryCredential ) {
                        appImage.push()
                        appImage.push('latest')
