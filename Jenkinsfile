@@ -21,7 +21,7 @@ pipeline {
               script {
                 def dImage = docker.build(registry + "/python-django:$BUILD_ID")
                 env.appImage = dImage
-                sh 'echo "appImage=${dImage}" > test/env.sh'
+                sh 'echo "appImage=${registry}/python-django:$BUILD_ID" > test/env.sh'
               }
            }
        }
