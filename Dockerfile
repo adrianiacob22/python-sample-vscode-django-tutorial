@@ -3,7 +3,7 @@ FROM tiangolo/uwsgi-nginx:python3.6-alpine3.7
 
 # Set the port on which the app runs; make both values the same.
 #
-# IMPORTANT: When deploying to Azure App Service, go to the App Service on the Azure 
+# IMPORTANT: When deploying to Azure App Service, go to the App Service on the Azure
 # portal, navigate to the Applications Settings blade, and create a setting named
 # WEBSITES_PORT with a value that matches the port here (the Azure default is 80).
 # You can also create a setting through the App Service Extension in VS Code.
@@ -25,6 +25,18 @@ ENV STATIC_URL /app/static_collected
 WORKDIR /app
 ADD . /app
 
+# Add steps to activate virtual environment while building
+RUN python3 -m venv venv
+RUN source venv/bin/activate
+
+# Make sure dependencies are installed
+
+RUN pip install --upgrade pip
+RUN python3 -m pip install -r requirements.txt
+
+# Create and initialize the database by running
+RUN python manage.py migrate
+
 # Make app folder writeable for the sake of db.sqlite3, and make that file also writeable.
 # Ideally you host the database somewhere else so that the app folders can remain read only.
 # Without these permissions you see the errors "unable to open database file" and
@@ -32,6 +44,3 @@ ADD . /app
 # write to the database.
 RUN chmod g+w /app
 RUN chmod g+w /app/db.sqlite3
-
-# Make sure dependencies are installed
-RUN python3 -m pip install -r requirements.txt
