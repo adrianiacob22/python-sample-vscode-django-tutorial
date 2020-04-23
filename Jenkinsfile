@@ -21,19 +21,21 @@ pipeline {
               script {
                 def dImage = docker.build(registry + "/python-django:$BUILD_ID")
                 env.appImage = dImage
+                sh 'echo "appImage=$appImage" > test/env.sh'
               }
            }
        }
        stage('Test') {
            steps {
                script {
-                 docker.image(env.appImage) { c ->
-                   docker.image(registry + "/python-django:$BUILD_ID").inside("--link ${c.id}:app") {}
-                   docker.image(curlimages/curl).inside("--link ${c.id}:app") {
-                   sh 'curl -X GET -i -o /dev/null -s -w "%{http_code}\n" ${app}:8000'
-                   }
+                  sh '''
+                  cd test
+                  set -a
+                  source env.sh
+                  docker-compose -p ci build
+                  docker-compose -p ci up --abort-on-container-exit
 
-               }
+                  '''
               }
            }
        }

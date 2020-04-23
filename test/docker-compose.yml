@@ -1,0 +1,13 @@
+version: '3.7'
+
+services:
+  app:
+    image: ${appImage}
+    env_file:
+      - env.sh
+  curl:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    links:
+      - app
