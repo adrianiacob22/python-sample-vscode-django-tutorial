@@ -14,7 +14,7 @@ pipeline {
                checkout scm
            }
        }
-       stage('Build and test') {
+       stage('Build') {
            steps {
               echo 'Starting to build docker image'
               script {
@@ -22,20 +22,26 @@ pipeline {
               }
            }
        }
-//       stage('Test') {
-//           steps {
-//               docker.image('mysql:5').withRun('-e "MYSQL_ROOT_PASSWORD=my-secret-pw" -p 3306:3306') { c ->
-//               /* Wait until mysql service is up */
-//               sh 'while ! mysqladmin ping -h0.0.0.0 --silent; do sleep 1; done'
-//               /* Run some tests which require MySQL */
-//               sh 'make check'
-//              }
-//           }
-//       }
+       stage('Test') {
+           steps {
+               docker.image(appImage).withRun(-p 8000:8000') { c ->
+               /* Wait until the application is started */
+               sh 'sleep 10'
+               /* Run some tests which require the app running */
+               sh '''errcode=$(curl -X GET -i -o /dev/null -s -w "%{http_code}\n" "http://localhost:8000/")
+               if [[ ${errcode} == 0 ]]; then
+               echo "Test succeeded"
+               else
+               echo "Test failed. Check app status."
+               fi
+               '''
+              }
+           }
+       }
        stage('Publish') {
            steps{
                script {
-                   docker.withRegistry( '', registryCredential ) {
+                   docker.withRegistry( registry, registryCredential ) {
                        appImage.push()
                        appImage.push('latest')
                    }

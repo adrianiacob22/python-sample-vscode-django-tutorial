@@ -37,6 +37,9 @@ RUN python3 -m pip install -r requirements.txt
 # Create and initialize the database by running
 RUN python manage.py migrate
 
+# Install curl to be able to run tests
+RUN apk add curl
+
 # Make app folder writeable for the sake of db.sqlite3, and make that file also writeable.
 # Ideally you host the database somewhere else so that the app folders can remain read only.
 # Without these permissions you see the errors "unable to open database file" and
