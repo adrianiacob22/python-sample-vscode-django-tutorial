@@ -34,8 +34,16 @@ pipeline {
                   #source env.sh
                   . ./env.sh
                   docker-compose -p ci build
+                  set +e
                   docker-compose -p ci up --abort-on-container-exit
+                  set -e
                   echo "${env.appImage}"
+                  if grep -q passed testresult
+                  then
+                    echo "Test passed"
+                  else
+                    echo "Test failed!!! Please check!!"
+                  fi
                   '''
               }
            }
