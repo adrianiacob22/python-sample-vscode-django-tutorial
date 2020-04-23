@@ -25,15 +25,12 @@ pipeline {
        stage('Test') {
            steps {
                script {
-                 docker.image(registry + "/python-django:$BUILD_ID").inside {
-                   sh 'sleep 10'
-                   sh '''errcode=$(curl -X GET -i -o /dev/null -s -w "%{http_code}\n" "http://localhost:8000/")
-                   if [[ ${errcode} == 0 ]]; then
-                   echo "Test succeeded"
-                   else
-                   echo "Test failed. Check app status."
-                   fi
-                 '''
+                 docker.image(registry + "/python-django:$BUILD_ID") { c ->
+                   docker.image(registry + "/python-django:$BUILD_ID").inside("--link ${c.id}:app") {}
+                   docker.image(curlimages/curl).inside("--link ${c.id}:app") {
+                   sh 'curl -X GET -i -o /dev/null -s -w "%{http_code}\n" ${app}:8000'
+                   }
+                   
                }
               }
            }
