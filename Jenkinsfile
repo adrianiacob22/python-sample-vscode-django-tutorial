@@ -32,7 +32,7 @@ pipeline {
                sh 'make check'
               }
            }
-       }*/
+       } */
        stage('Publish') {
            environment {
                registryCredential = 'docker-repo'
@@ -53,6 +53,6 @@ pipeline {
                    sh "ansible-playbook  playbook.yml --extra-vars \"image_id=${image_id}\""
                }
            }
-       }*/
+       } */
    }
 }
