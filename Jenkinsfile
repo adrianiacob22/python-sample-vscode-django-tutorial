@@ -24,15 +24,17 @@ pipeline {
        }
        stage('Test') {
            steps {
-               docker.image(appImage).withRun('-p 8000:8000').inside('sleep 10') {
-                 sh 'sleep 10'
-                 sh '''errcode=$(curl -X GET -i -o /dev/null -s -w "%{http_code}\n" "http://localhost:8000/")
-                 if [[ ${errcode} == 0 ]]; then
-                 echo "Test succeeded"
-                 else
-                 echo "Test failed. Check app status."
-                 fi
-               '''
+               script {
+                 docker.image(registry + "/python-django:$BUILD_ID").withRun('-p 8000:8000').inside {
+                   sh 'sleep 10'
+                   sh '''errcode=$(curl -X GET -i -o /dev/null -s -w "%{http_code}\n" "http://localhost:8000/")
+                   if [[ ${errcode} == 0 ]]; then
+                   echo "Test succeeded"
+                   else
+                   echo "Test failed. Check app status."
+                   fi
+                 '''
+               }
               }
            }
        }
