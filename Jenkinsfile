@@ -24,7 +24,7 @@ pipeline {
        }
        stage('Test') {
            steps {
-               docker.image(appImage).withRun(-p 8000:8000') { c ->
+               docker.image(appImage).withRun('-p 8000:8000') { c ->
                /* Wait until the application is started */
                sh 'sleep 10'
                /* Run some tests which require the app running */
