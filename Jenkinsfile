@@ -18,9 +18,7 @@ pipeline {
            steps {
               echo 'Starting to build docker image'
               script {
-                docker.withRegistry(registry, registryCredential) {
                 def appImage = docker.build(registry + "/python-django:$BUILD_ID")
-                }
               }
            }
        }
@@ -51,6 +49,6 @@ pipeline {
 //                   sh "ansible-playbook  playbook.yml --extra-vars \"image_id=${image_id}\""
 //               }
 //           }
-//       } 
+//       }
    }
 }
