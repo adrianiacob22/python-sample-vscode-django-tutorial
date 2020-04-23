@@ -7,6 +7,7 @@ pipeline {
    environment {
        registry = "nexus.local.net:8123"
        registryCredential = credentials('docker-repo')
+       appImage = "NOT_SET"
    }
    stages {
        stage('Checkout scm') {
@@ -18,19 +19,20 @@ pipeline {
            steps {
               echo 'Starting to build docker image'
               script {
-                def appImage = docker.build(registry + "/python-django:$BUILD_ID")
+                def dImage = docker.build(registry + "/python-django:$BUILD_ID")
+                env.appImage = dImage
               }
            }
        }
        stage('Test') {
            steps {
                script {
-                 docker.image(registry + "/python-django:$BUILD_ID") { c ->
+                 docker.image(env.appImage) { c ->
                    docker.image(registry + "/python-django:$BUILD_ID").inside("--link ${c.id}:app") {}
                    docker.image(curlimages/curl).inside("--link ${c.id}:app") {
                    sh 'curl -X GET -i -o /dev/null -s -w "%{http_code}\n" ${app}:8000'
                    }
-                   
+
                }
               }
            }
