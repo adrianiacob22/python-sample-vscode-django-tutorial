@@ -9,6 +9,10 @@
       definition: "{{ lookup('file', 'service.yml') }}"
       validate_certs: no
       namespace: default
+
+  - debug:
+      msg: "{{ appImage }}"
+
   - name: Deploy the application
     k8s:
       state: present
