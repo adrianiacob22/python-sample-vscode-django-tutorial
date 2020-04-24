@@ -6,6 +6,7 @@ pipeline {
    }
    environment {
        registry = "nexus.local.net:8123"
+       registryurl = "http://nexus.local.net:8123"
        registryCredential = credentials('docker-repo')
        appImage = "NOT_SET"
    }
@@ -33,7 +34,7 @@ pipeline {
                   set -a
                   . ./env.sh
                   docker-compose -p ci build
-                  docker-compose -p ci up --abort-on-container-exit --exit-code-from app
+                  docker-compose -p ci up --abort-on-container-exit --exit-code-from curl
                   docker-compose -p ci rm -f
                   '''
               }
@@ -45,7 +46,7 @@ pipeline {
                   //withCredentials([usernamePassword(credentialsId: 'docker-repo', passwordVariable: 'nexusPassword', usernameVariable: 'nexusUser')]) {
                   // docker tag
                   //}
-                   docker.withRegistry( 'registry', docker-repo ) {
+                   docker.withRegistry( 'registryurl', docker-repo ) {
                        appImage.push()
                        appImage.push('latest')
                    }
