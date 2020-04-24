@@ -55,14 +55,14 @@ pipeline {
            steps {
                script{
                      def image_id = registry + "/python-django:$BUILD_ID"
-//                   sh "ansible-playbook  playbook.yml --extra-vars \"image_id=${image_id}\""
+//                   sh "ansible-playbook  playbook.yml --extra-vars \"appImage=${image_id}\""
 
                       withCredentials([kubeconfigFile(credentialsId: 'k8smaster', variable: 'KUBECONFIG')]){
                         ansiColor('xterm') {
                           ansiblePlaybook (
                           colorized: true,
                           playbook: 'deploy/playbook.yml',
-                          extras: '-e "appImage=${image_id}" -vv')
+                          extras: "-e \"appImage=${image_id}\" -vv")
                         }
                       }
                }
