@@ -55,7 +55,7 @@ pipeline {
        stage ('Deploy') {
            steps {
                script{
-                     def image_id = registry + ":$BUILD_NUMBER"
+                     def image_id = registry + "/python-django:$BUILD_ID"
 //                   sh "ansible-playbook  playbook.yml --extra-vars \"image_id=${image_id}\""
 
                       withCredentials([kubeconfigFile(credentialsId: 'k8smaster', variable: 'KUBECONFIG')]){
