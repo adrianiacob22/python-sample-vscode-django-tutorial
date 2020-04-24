@@ -45,9 +45,9 @@ pipeline {
            steps{
                script {
                    docker.withRegistry( registryurl, 'nexus' ) {
-                   println env.appImage
-                      docker.push(env.appImage)
-                      docker.push(env.appImage + ':latest')
+                      def appImage = docker.build(registry + "/python-django:$BUILD_ID")
+                      appImage.push()
+                      appImage.push('latest')
                    }
                }
            }
