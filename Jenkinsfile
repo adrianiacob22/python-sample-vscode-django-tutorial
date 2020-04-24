@@ -62,7 +62,7 @@ pipeline {
                           ansiblePlaybook (
                           colorized: true,
                           playbook: 'deploy/playbook.yml',
-                          extras: '-e "image_id=${image_id}" -vv')
+                          extras: '-e "appImage=${image_id}" -vv')
                         }
                       }
                }
