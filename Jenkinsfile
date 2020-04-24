@@ -45,9 +45,9 @@ pipeline {
            steps{
                script {
                    docker.withRegistry( registryurl, 'nexus' ) {
-                   println appImage
-                      appImage.push()
-                      appImage.push('latest')
+                   println env.appImage
+                      docker.push(env.appImage)
+                      docker.push(env.appImage + ':latest')
                    }
                }
            }
