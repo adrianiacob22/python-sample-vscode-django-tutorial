@@ -52,13 +52,23 @@ pipeline {
                }
            }
        }
-//       stage ('Deploy') {
-//           steps {
-//               script{
-//                   def image_id = registry + ":$BUILD_NUMBER"
+       stage ('Deploy') {
+           steps {
+               script{
+                     def image_id = registry + ":$BUILD_NUMBER"
 //                   sh "ansible-playbook  playbook.yml --extra-vars \"image_id=${image_id}\""
-//               }
-//           }
-//       }
+
+                      withCredentials([kubeconfigFile(credentialsId: 'k8smaster', variable: 'KUBECONFIG')]){
+                        ansiColor('xterm') {
+                          ansiblePlaybook (
+                          colorized: true,
+                          playbook: 'deploy/playbook.yml',
+                          extras: '-e "image_id=${image_id}" -vv',
+                          tags: 'check_age')
+                        }
+                      }
+               }
+           }
+       }
    }
 }
