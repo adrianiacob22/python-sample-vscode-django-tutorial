@@ -46,7 +46,7 @@ pipeline {
                   //withCredentials([usernamePassword(credentialsId: 'docker-repo', passwordVariable: 'nexusPassword', usernameVariable: 'nexusUser')]) {
                   // docker tag
                   //}
-                   docker.withRegistry( 'registryurl', docker-repo ) {
+                   docker.withRegistry( 'registryurl', nexus ) {
                        appImage.push()
                        appImage.push('latest')
                    }
