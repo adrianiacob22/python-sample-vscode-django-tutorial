@@ -63,8 +63,7 @@ pipeline {
                           ansiblePlaybook (
                           colorized: true,
                           playbook: 'deploy/playbook.yml',
-                          extras: '-e "image_id=${image_id}" -vv',
-                          tags: 'check_age')
+                          extras: '-e "image_id=${image_id}" -vv')
                         }
                       }
                }
