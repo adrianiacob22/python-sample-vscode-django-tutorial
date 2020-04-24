@@ -29,7 +29,6 @@ pipeline {
        stage('Integration test') {
            steps {
                script {
-               println appImage
                   sh '''
                   cd test
                   set -a
