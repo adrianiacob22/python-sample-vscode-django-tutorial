@@ -29,6 +29,7 @@ pipeline {
        stage('Integration test') {
            steps {
                script {
+               println appImage
                   sh '''
                   cd test
                   set -a
@@ -43,12 +44,10 @@ pipeline {
        stage('Publish') {
            steps{
                script {
-                  //withCredentials([usernamePassword(credentialsId: 'docker-repo', passwordVariable: 'nexusPassword', usernameVariable: 'nexusUser')]) {
-                  // docker tag
-                  //}
-                   docker.withRegistry( 'registryurl', nexus ) {
-                       appImage.push()
-                       appImage.push('latest')
+                   docker.withRegistry( registryurl, 'nexus' ) {
+                   println appImage
+                      def appImage.push()
+                      def appImage.push('latest')
                    }
                }
            }
