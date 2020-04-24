@@ -25,23 +25,15 @@ pipeline {
               }
            }
        }
-       stage('Test') {
+       stage('Integration test') {
            steps {
                script {
                   sh '''
                   cd test
                   set -a
-                  #source env.sh
                   . ./env.sh
                   docker-compose -p ci build
-                  docker-compose -p ci up -d
-                  sleep 41
-                  if grep -q passed testresult
-                  then
-                    echo "Test passed"
-                  else
-                    echo "Test failed!!! Please check!!"
-                  fi
+                  docker-compose -p ci up --abort-on-container-exit --exit-code-from app
                   docker-compose -p ci rm -f
                   '''
               }
@@ -50,8 +42,10 @@ pipeline {
        stage('Publish') {
            steps{
                script {
-
-                   docker.withRegistry( registry, registryCredential ) {
+                  //withCredentials([usernamePassword(credentialsId: 'docker-repo', passwordVariable: 'nexusPassword', usernameVariable: 'nexusUser')]) {
+                  // docker tag
+                  //}
+                   docker.withRegistry( 'registry', docker-repo ) {
                        appImage.push()
                        appImage.push('latest')
                    }
