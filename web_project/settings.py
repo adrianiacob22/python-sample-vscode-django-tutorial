@@ -35,7 +35,8 @@ ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
     'app',
-    'jenkins.local.net'  # Sample name only!
+    'jenkins.local.net',
+    'k8smater.local.net'  # Sample name only!
 ]
 
 # Application definition
