@@ -36,7 +36,8 @@ ALLOWED_HOSTS = [
     '127.0.0.1',
     'app',
     'jenkins.local.net',
-    'kmaster.local.net'  # Sample name only!
+    'kmaster.local.net',
+    'kworker1.local.net'  # Sample name only!
 ]
 
 # Application definition
