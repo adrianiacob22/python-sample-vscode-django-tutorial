@@ -26,7 +26,7 @@
           labels:
             role: app
         spec:
-          replicas: 2
+          replicas: 6
           selector:
             matchLabels:
               role: app
