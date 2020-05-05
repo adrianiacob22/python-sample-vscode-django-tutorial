@@ -4,6 +4,7 @@ pipeline {
             label 'docker'
       }
    }
+
    environment {
        registry = "nexus.local.net:8123"
        registryurl = "http://nexus.local.net:8123"
@@ -13,6 +14,7 @@ pipeline {
    stages {
        stage('Checkout scm') {
            steps {
+               cleanWs()
                checkout scm
            }
        }
