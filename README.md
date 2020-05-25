@@ -1,4 +1,4 @@
-[![Build Status](https://195.82.149.193/buildStatus/icon?job=python-build)](https://195.82.149.193/job/python-build/)
+https://jenkins.local.net/buildStatus/icon?job=python-build
 
 This sample contains the completed program from the tutorial, [Using Django in Visual Studio Code](https://code.visualstudio.com/docs/python/tutorial-django). Intermediate steps are not included.
 
