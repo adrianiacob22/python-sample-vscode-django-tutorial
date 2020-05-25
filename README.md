@@ -1,3 +1,5 @@
+[![Build Status](https://195.82.149.193/buildStatus/icon?job=python-build)](https://195.82.149.193/job/python-build/)
+
 This sample contains the completed program from the tutorial, [Using Django in Visual Studio Code](https://code.visualstudio.com/docs/python/tutorial-django). Intermediate steps are not included.
 
 The sample also includes a Dockerfile to build a production-ready container image that uses uwsgi and nginx; the uwsgi.ini file provides uwsgi configuration.
