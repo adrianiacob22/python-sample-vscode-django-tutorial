@@ -10,22 +10,18 @@ pipeline {
        registryurl = "http://nexus.local.net:8123"
    }
    stages {
-       stage('Checkout scm') {
+       stage('Cleanup workspace and checkout scm') {
            steps {
                cleanWs()
                checkout scm
            }
        }
-       stage('Build and Publish') {
+       stage('Build docker image') {
            steps {
               echo 'Starting to build docker image'
               script {
                 env.appImage = env.registry + "/python-django:${env.BUILD_ID}"
-                env.buildImage = docker.build("${env.registry}" + "/python-django:${env.BUILD_ID}")
-                docker.withRegistry( registryurl, 'nexus' ) {
-                   buildImage.push()
-                   buildImage.push('latest')
-                }
+                buildImage = docker.build("${env.registry}" + "/python-django:${env.BUILD_ID}")
               }
            }
        }
@@ -42,7 +38,7 @@ pipeline {
               }
            }
        }
-       stage('Publish') {
+       stage('Publish the image to nexus') {
            steps{
                script {
                    docker.withRegistry( registryurl, 'nexus' ) {
@@ -52,7 +48,7 @@ pipeline {
                }
            }
        }
-       stage ('Deploy') {
+       stage ('Deploy to Kubernetes') {
            steps {
                script{
 //                   sh "ansible-playbook  playbook.yml --extra-vars \"appImage=${image_id}\""
