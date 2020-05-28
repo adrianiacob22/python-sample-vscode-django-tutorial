@@ -50,17 +50,17 @@ pipeline {
            }
        }
        stage ('Deploy') {
-           steps {app
+           steps {
                script{
 //                   sh "ansible-playbook  playbook.yml --extra-vars \"appImage=${image_id}\""
-                      withCredentials([kubeconfigFile(credentialsId: 'k8smaster', variable: 'KUBECONFIG')]){
-                        ansiColor('xterm') {
-                          ansiblePlaybook (
-                          colorized: true,
-                          playbook: 'deploy/playbook.yml',
-                          extras: "-e \"appImage=${appImage}\" -vv")
-                        }
-                      }
+                  withCredentials([kubeconfigFile(credentialsId: 'k8smaster', variable: 'KUBECONFIG')]){
+                     ansiColor('xterm') {
+                       ansiblePlaybook (
+                       colorized: true,
+                       playbook: 'deploy/playbook.yml',
+                       extras: "-e \"appImage=${appImage}\" -vv")
+                     }
+                  }
                }
            }
        }
