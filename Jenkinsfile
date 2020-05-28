@@ -8,7 +8,6 @@ pipeline {
    environment {
        registry = "nexus.local.net:8123"
        registryurl = "http://nexus.local.net:8123"
-       registryCredential = credentials('nexus')
    }
    stages {
        stage('Checkout scm') {
@@ -42,7 +41,7 @@ pipeline {
        stage('Publish') {
            steps{
                script {
-                   docker.withRegistry( registryurl, registryCredential ) {
+                   docker.withRegistry( registryurl, 'nexus' ) {
                       buildImage.push()
                       buildImage.push('latest')
                    }
