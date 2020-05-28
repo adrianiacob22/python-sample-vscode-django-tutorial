@@ -16,12 +16,16 @@ pipeline {
                checkout scm
            }
        }
-       stage('Build') {
+       stage('Build and Publish') {
            steps {
               echo 'Starting to build docker image'
               script {
                 env.appImage = env.registry + "/python-django:${env.BUILD_ID}"
                 env.buildImage = docker.build("${env.registry}" + "/python-django:${env.BUILD_ID}")
+                docker.withRegistry( registryurl, 'nexus' ) {
+                   buildImage.push()
+                   buildImage.push('latest')
+                }
               }
            }
        }
