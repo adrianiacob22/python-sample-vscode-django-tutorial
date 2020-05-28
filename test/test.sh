@@ -1,4 +1,4 @@
-sleep 40
+sleep 20
 if curl http://app:8000 | grep -q 'Home'; then
   echo "Tests passed!" > testresult
   exit 0
