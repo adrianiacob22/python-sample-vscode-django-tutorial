@@ -8,7 +8,7 @@ pipeline {
    environment {
        registry = "nexus.local.net:8123"
        registryurl = "http://nexus.local.net:8123"
-       registryCredential = credentials('docker-repo')
+       registryCredential = credentials('nexus')
    }
    stages {
        stage('Checkout scm') {
@@ -22,7 +22,7 @@ pipeline {
               echo 'Starting to build docker image'
               script {
                 env.appImage = env.registry + "/python-django:${env.BUILD_ID}"
-                docker.build("${env.registry}" + "/python-django:${env.BUILD_ID}")
+                env.buildImage = docker.build("${env.registry}" + "/python-django:${env.BUILD_ID}")
               }
            }
        }
@@ -42,15 +42,15 @@ pipeline {
        stage('Publish') {
            steps{
                script {
-                   docker.withRegistry( registryurl, 'nexus' ) {
-                      appImage.push()
-                      appImage.push('latest')
+                   docker.withRegistry( registryurl, registryCredential ) {
+                      buildImage.push()
+                      buildImage.push('latest')
                    }
                }
            }
        }
        stage ('Deploy') {
-           steps {
+           steps {app
                script{
 //                   sh "ansible-playbook  playbook.yml --extra-vars \"appImage=${image_id}\""
                       withCredentials([kubeconfigFile(credentialsId: 'k8smaster', variable: 'KUBECONFIG')]){
