@@ -31,7 +31,6 @@ pipeline {
                   sh '''
                   cd test
                   set -a
-                  . ./env.sh
                   docker-compose -p ci build
                   docker-compose -p ci up --abort-on-container-exit --exit-code-from curl
                   docker-compose -p ci rm -f
