@@ -32,7 +32,8 @@ pipeline {
                   cd test
                   set -a
                   docker-compose -p ci build
-                  docker-compose -p ci up --abort-on-container-exit --exit-code-from curl
+                  docker-compose config
+                  docker-compose -p ci up -e "appImage=${appImage}" --abort-on-container-exit --exit-code-from curl
                   docker-compose -p ci rm -f
                   '''
               }
