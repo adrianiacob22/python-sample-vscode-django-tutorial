@@ -21,7 +21,8 @@ pipeline {
            steps {
               echo 'Starting to build docker image'
               script {
-                env.appImage = docker.build(registry + "/python-django:$BUILD_ID")
+                env.appImage = env.registry + "/python-django:${env.BUILD_ID}"
+                docker.build("${env.registry}" + "/python-django:${env.BUILD_ID}")
               }
            }
        }
@@ -32,8 +33,7 @@ pipeline {
                   cd test
                   set -a
                   docker-compose -p ci build
-                  docker-compose config
-                  docker-compose -p ci up -e "appImage=${appImage}" --abort-on-container-exit --exit-code-from curl
+                  docker-compose -p ci up --abort-on-container-exit --exit-code-from curl
                   docker-compose -p ci rm -f
                   '''
               }
